@@ -27,22 +27,26 @@ def Circle_Detection(Image_Path):
             cv2.circle(img, (a, b), 1, (0, 255, 255), 3)
         # cv2.imshow("Detected Circle", detected_circles)
         cv2.imshow("Detected Circle", img)
-        print(img[a, b])
         sum = 0
+        ix = 0
         for i in range(a - 2, a + 2):
             for j in range(b - 2, b + 2):
-                print(img[i, j])
-                sum += img[i, j].astype(float)
-        avg = (img[a-1, b]/5 + img[a+1, b]/5 + img[a, b]/5 + img[a, b+1]/5 + img[a, b-1]/5)
-        print(sum)
+                if img[i, j][0] != 0 and img[i, j][1] != 0 and img[i, j][2] != 0\
+                        and img[i, j][0] != 255 and img[i, j][1] != 255 and img[i, j][2] != 255:
+                    # print(img[i, j])
+                    # print(img[i, j][0])
+                    ix += 1
+                    sum += img[i, j].astype(float)
+
+        # avg = (img[a-1, b]/5 + img[a+1, b]/5 + img[a, b]/5 + img[a, b+1]/5 + img[a, b-1]/5)
+        # print(sum/ix)
         cv2.waitKey(0)
 
 
-    return img[a, b]
+    return sum/ix
 
 # 50 forintosok:
 Circle_Detection('Images/OTVEN/1.jpg')
-"""
 Circle_Detection('Images/OTVEN/2.jpg')
 Circle_Detection('Images/OTVEN/3.jpg')
 Circle_Detection('Images/OTVEN/4.jpg')
@@ -51,8 +55,19 @@ Circle_Detection('Images/OTVEN/6.jpg')
 Circle_Detection('Images/OTVEN/7.jpg')
 Circle_Detection('Images/OTVEN/8.jpg')
 Circle_Detection('Images/OTVEN/9.jpg')
-Circle_Detection('Images/OTVEN/10.jpg')"""
+Circle_Detection('Images/OTVEN/10.jpg')
 
+otvenatlag = Circle_Detection('Images/OTVEN/1.jpg') +\
+Circle_Detection('Images/OTVEN/2.jpg') +\
+Circle_Detection('Images/OTVEN/3.jpg') +\
+Circle_Detection('Images/OTVEN/4.jpg') +\
+Circle_Detection('Images/OTVEN/5.jpg') +\
+Circle_Detection('Images/OTVEN/6.jpg') +\
+Circle_Detection('Images/OTVEN/7.jpg') +\
+Circle_Detection('Images/OTVEN/8.jpg') +\
+Circle_Detection('Images/OTVEN/9.jpg') +\
+Circle_Detection('Images/OTVEN/10.jpg')
+print(otvenatlag/10)
 
 def SIFT_Algorithm(Image_Path):
     # ori = cv2.imread(Image_Path)
