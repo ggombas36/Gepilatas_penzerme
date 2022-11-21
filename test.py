@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
-
-def Circle_Detection(Image_Path):
+def Circle_Declaration(Image_Path):
     img = cv2.imread(Image_Path, 1)
     img = cv2.resize(img, (0, 0), fx=0.2, fy=0.2)
     # Convert to grayscale.
@@ -18,16 +18,19 @@ def Circle_Detection(Image_Path):
     # Draw circles that are detected.
     if detected_circles is not None:
         # Convert the circle parameters a, b and r to integers.
+        # print(detected_circles)
         detected_circles = np.uint16(np.around(detected_circles))
         for pt in detected_circles[0, :]:
+            # print(pt)
             a, b, r = pt[0], pt[1], pt[2]
             # Draw the circumference of the circle.
             cv2.circle(img, (a, b), r, (0, 0, 255), 2)
             # Draw a small circle (of radius 1) to show the center.
             cv2.circle(img, (a, b), 1, (0, 255, 255), 3)
         # cv2.imshow("Detected Circle", detected_circles)
-        cv2.imshow("Detected Circle", img)
-        sum = 0
+
+        # cv2.imshow("Detected Circle", img)
+        summa = 0
         ix = 0
         for i in range(a - 2, a + 2):
             for j in range(b - 2, b + 2):
@@ -36,16 +39,119 @@ def Circle_Detection(Image_Path):
                     # print(img[i, j])
                     # print(img[i, j][0])
                     ix += 1
-                    sum += img[i, j].astype(float)
-
+                    summa += img[i, j].astype(np.float32)
+                    # A.append(img[i, j].astype(np.float32))
+        # X = np.average(np.asarray((A)), axis=1, keepdims=True)
+        # np.save('files/50', A)
+        # B = np.load('files/50.npy')
+        # print(B)
+        # print(X)
+        # print(summa / ix)
         # avg = (img[a-1, b]/5 + img[a+1, b]/5 + img[a, b]/5 + img[a, b+1]/5 + img[a, b-1]/5)
         # print(sum/ix)
         cv2.waitKey(0)
 
 
-    return sum/ix
+    return summa/ix
 
+# Circle_Detection('images/img_src/OTVEN/1.JPG')
 # 50 forintosok:
+"""
+def Color_Reference():
+    folderNames = [name for name in os.listdir('images/img_src/')]
+    for folderName in folderNames:
+        array = []
+        for i in range(1, len(os.listdir(f'images/img_src/{folderName}/')) + 1):
+            # avg = str(Circle_Detection(f'images/img_src/{folderName}/{i}.jpg'))
+            # with open('50.txt', 'a') as f:
+            # f.write(avg + '\n')
+            array.append(Circle_Declaration(f'images/img_src/{folderName}/{i}.jpg'))
+        np.save(f'files/{folderName}', array)
+# folderNames = [name for name in os.listdir('images/img_src/')]
+# folderNames = ["OTVEN"]
+Color_Reference()
+"""
+"""
+for folderName in folderNames:
+    array = []
+    for i in range(1, len(os.listdir(f'images/img_src/{folderName}/')) + 1):
+        # avg = str(Circle_Detection(f'images/img_src/{folderName}/{i}.jpg'))
+        # with open('50.txt', 'a') as f:
+            # f.write(avg + '\n')
+        array.append(Circle_Declaration(f'images/img_src/{folderName}/{i}.jpg'))
+    np.save('files/50', array)
+"""
+"""
+X = np.load('files/50.npy')
+sz = 0
+A = Circle_Declaration('images/img_src/OTVEN/1.JPG').astype(np.float32)
+print(X)
+print(A)
+for i in X:
+    bigger = i + 25
+    less = i - 25
+    if (A[0] > less[0] and A[1] > less[1] and A[2] > less[2]) and\
+            (A[0] < bigger[0] and A[1] < bigger[1] and A[2] < bigger[2]):
+        sz += 1
+print(sz)
+"""
+"""
+def Circle_Detection(Images_Path):
+    img = cv2.imread(Images_Path, 1)
+    img = cv2.resize(img, (0, 0), fx=0.3, fy=0.3)
+    # Convert to grayscale.
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Blur using 3 * 3 kernel.
+    gray_blurred = cv2.blur(gray, (3, 3))
+    # Apply Hough transform on the blurred image.
+    detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1.2, 60,
+                                        param1=50, param2=30, minRadius=25, maxRadius=60)
+    # Draw circles that are detected.
+    if detected_circles is not None:
+        # Convert the circle parameters a, b and r to integers.
+        detected_circles = np.uint16(np.around(detected_circles))
+        for pt in detected_circles[0, :]:
+            a, b, r = pt[0], pt[1], pt[2]
+            # Draw the circumference of the circle.
+            cv2.circle(img, (a, b), r, (0, 0, 255), 2)
+            # Draw a small circle (of radius 1) to show the center.
+            cv2.circle(img, (a, b), 1, (0, 255, 255), 3)
+            ix = 0
+            summa = 0
+            for i in range(a - 2, a + 2):
+                for j in range(b - 2, b + 2):
+                    if img[i, j][0] != 0 and img[i, j][1] != 0 and img[i, j][2] != 0 \
+                            and img[i, j][0] != 255 and img[i, j][1] != 255 and img[i, j][2] != 255:
+                        # print(img[i, j])
+                        # print(img[i, j][0])
+                        ix += 1
+                        summa += img[i, j].astype(np.float32)
+            avg = summa/ix
+            folderNames = [name for name in os.listdir('files/')]
+            matches = []
+            for file in folderNames:
+                openFile = np.load(f'files/{file}')
+                match = 0
+                for i in openFile:
+                    bigger = i + 25
+                    less = i - 25
+                    if (avg[0] > less[0] and avg[1] > less[1] and avg[2] > less[2]) and \
+                            (avg[0] < bigger[0] and avg[1] < bigger[1] and avg[2] < bigger[2]):
+                        match += 1
+                matches.append(match)
+            maxMatches = 0
+            index = 0
+            p = 0
+            for i in matches:
+                if maxMatches < i:
+                    maxMatches = i
+                    index = p
+                p += 1
+            # coins = ['öt', 'tíz', 'húsz', 'ötven', 'száz', 'kétszáz']
+        cv2.imshow('Detected Circle', img)
+        cv2.waitKey(0)
+"""
+"""
 Circle_Detection('Images/OTVEN/1.jpg')
 Circle_Detection('Images/OTVEN/2.jpg')
 Circle_Detection('Images/OTVEN/3.jpg')
@@ -56,7 +162,8 @@ Circle_Detection('Images/OTVEN/7.jpg')
 Circle_Detection('Images/OTVEN/8.jpg')
 Circle_Detection('Images/OTVEN/9.jpg')
 Circle_Detection('Images/OTVEN/10.jpg')
-
+"""
+"""
 otvenatlag = Circle_Detection('Images/OTVEN/1.jpg') +\
 Circle_Detection('Images/OTVEN/2.jpg') +\
 Circle_Detection('Images/OTVEN/3.jpg') +\
@@ -68,7 +175,7 @@ Circle_Detection('Images/OTVEN/8.jpg') +\
 Circle_Detection('Images/OTVEN/9.jpg') +\
 Circle_Detection('Images/OTVEN/10.jpg')
 print(otvenatlag/10)
-
+"""
 def SIFT_Algorithm(Image_Path):
     # ori = cv2.imread(Image_Path)
     # ori = cv2.resize(ori, (0, 0), fx=0.3, fy=0.3)
@@ -82,7 +189,8 @@ def SIFT_Algorithm(Image_Path):
     cv2.imshow('SIFT', img)
     cv2.waitKey(0)
     return kp, des
-
+# ORB algoritmus
+# numpy.save, numpy.load
 def Ot_Ft():
     kp1, des1 = SIFT_Algorithm('Images/OT/ot1.jpg')
     kp2, des2 = SIFT_Algorithm('Images/OT/ot2.jpg')
