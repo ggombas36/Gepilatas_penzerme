@@ -122,14 +122,32 @@ def Circle_Detection(Images_Path):
                     maxMatches = i
                     index = p
                 p += 1
+            percent = index * 10
             coins = ['husz', 'ketszaz', 'ot', 'otven', 'szaz', 'tiz']
-            img = cv2.putText(img, coins[index], (a, b), cv2.FONT_HERSHEY_SIMPLEX,
+            img = cv2.putText(img, f'{coins[index]} {percent}%', (a, b), cv2.FONT_HERSHEY_PLAIN,
                                 1, (255, 0, 0), 2, cv2.LINE_AA)
         cv2.imshow('Detected Circle', img)
         cv2.waitKey(0)
-Circle_Detection('src/images/own/SAJAT/sajat1.jpg')
-Circle_Detection('src/images/own/SAJAT/sajat2.jpg')
-Circle_Detection('src/images/own/SAJAT/sajat3.jpg')
-Circle_Detection('src/images/own/SAJAT/sajat4.jpg')
-Circle_Detection('src/images/own/SAJAT/sajat5.jpg')
+# Circle_Detection('src/images/own/SAJAT/sajat1.jpg')
+# Circle_Detection('src/images/own/SAJAT/sajat2.jpg')
+# Circle_Detection('src/images/own/SAJAT/sajat3.jpg')
+# Circle_Detection('src/images/own/SAJAT/sajat4.jpg')
+# Circle_Detection('src/images/own/SAJAT/sajat5.jpg')
+
+def ORB_Declaration(Images_Path):
+    img = cv2.imread(Images_Path, 1)
+    img = cv2.resize(img, (0, 0), fx=0.3, fy=0.3)
+    orb = cv2.ORB_create()
+    # find the keypoints with ORB
+    kp = orb.detect(img, None)
+    # compute the descriptors with ORB
+    kp, des = orb.compute(img, kp)
+    return des
+
+def Descriptors_Reference():
+    folderNames = [name for name in os.listdir('src/images/img_src/')]
+    for folderName in folderNames:
+        for i in range(1, len(os.listdir(f'src/images/img_src/{folderName}/')) + 1):
+            np.save(f'src/descriptors/{folderName}/{i}', ORB_Declaration(f'src/images/img_src/{folderName}/{i}.jpg'))
+# Descriptors_Reference()
 
