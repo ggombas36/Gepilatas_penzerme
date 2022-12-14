@@ -16,7 +16,6 @@ def calculateSingleCircleMean(path):
     # Draw circles that are detected.
     if detected_circles is not None:
         # Convert the circle parameters a, b and r to integers.
-        # print(detected_circles)
         detected_circles = np.uint16(np.around(detected_circles))
         for pt in detected_circles[0, :]:
             # print(pt)
@@ -100,9 +99,9 @@ def calculateMultipleCircleMean(path):
                             1, (255, 0, 0), 2, cv2.LINE_AA)
         cv2.imshow('Detected Circle', img)
         cv2.waitKey(0)
-calculateMultipleCircleMean('src/images/others/Regisajat/sajat2.jpg')
-calculateMultipleCircleMean('src/images/others/Regisajat/sajat1.jpg')
-calculateMultipleCircleMean('src/images/others/Regisajat/sajat4.jpg')
+# calculateMultipleCircleMean('src/images/others/Regisajat/sajat2.jpg')
+# calculateMultipleCircleMean('src/images/others/Regisajat/sajat1.jpg')
+# calculateMultipleCircleMean('src/images/others/Regisajat/sajat4.jpg')
 
 
 
@@ -187,5 +186,5 @@ def detectionORB(path):
         cv2.imshow('Detected Circle', img)
         cv2.waitKey(0)
 
-detectionORB('src/images/own/SAJAT/2.jpg')
-detectionORB('src/images/own/SAJAT/5.jpg')
+# detectionORB('src/images/own/SAJAT/2.jpg')
+# detectionORB('src/images/own/SAJAT/5.jpg')
